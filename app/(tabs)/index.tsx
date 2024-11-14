@@ -12,7 +12,7 @@ export default function HomeScreen() {
           style={imagens.partenLogo}
         />
         <Text style={textos.titulo}>
-          Municipio da Beira
+          Maximum system
         </Text>
         
       </View>
@@ -71,7 +71,7 @@ const textos = StyleSheet.create({
     width: "85%",
     textAlign: "center",
     marginTop: 10,
-    textTransform: "uppercase"
+    textTransform: "capitalize"
   },
 
   paragrafo: {

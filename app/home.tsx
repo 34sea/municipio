@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { NativeRouter, Route, Routes, Link } from 'react-router-native';
 
 const Home = () => {
-  // Estados para armazenar os valores do formulário
-  const [documentType, setDocumentType] = useState('');
-  const [documentFee, setDocumentFee] = useState('');
+  const [licensingType, setLicensingType] = useState('');
   const [requesterName, setRequesterName] = useState('');
   const [biNumber, setBiNumber] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -15,9 +13,7 @@ const Home = () => {
   const [additionalInfo, setAdditionalInfo] = useState('');
 
   const handleRequest = () => {
-    // Resetar os campos
-    setDocumentType('');
-    setDocumentFee('');
+    setLicensingType('');
     setRequesterName('');
     setBiNumber('');
     setPhoneNumber('');
@@ -28,35 +24,21 @@ const Home = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Solicitar Documentos</Text>
-      
-      {/* Tipo de Documento */}
-      <Text style={styles.label}>Tipo de Documento:</Text>
+      <Text style={styles.title}>Solicitar Licenciamento</Text>
+
+      <Text style={styles.label}>Tipo de Licenciamento:</Text>
       <Picker
-        selectedValue={documentType}
-        onValueChange={(itemValue) => setDocumentType(itemValue)}
+        selectedValue={licensingType}
+        onValueChange={(itemValue) => setLicensingType(itemValue)}
         style={styles.picker}
       >
-        <Picker.Item label="Selecione o tipo de documento" value="" />
-        <Picker.Item label="Certidão de Nascimento" value="birth_certificate" />
-        <Picker.Item label="Certidão de Casamento" value="marriage_certificate" />
-        <Picker.Item label="Bilhete de Identidade" value="id_card" />
+        <Picker.Item label="Selecione o tipo de licenciamento" value="" />
+        <Picker.Item label="Licenciamento Simplificado" value="simplified" />
+        <Picker.Item label="Licenciamento Comercial" value="commercial" />
+        <Picker.Item label="Licenciamento Industrial" value="industrial" />
       </Picker>
 
-      {/* Taxa do Documento */}
-      {/*<Text style={styles.label}>Taxa do Documento:</Text>
-      <Picker
-        selectedValue={documentFee}
-        onValueChange={(itemValue) => setDocumentFee(itemValue)}
-        style={styles.picker}
-      >
-        <Picker.Item label="Selecione a taxa" value="" />
-        <Picker.Item label="100 MZN" value="100" />
-        <Picker.Item label="200 MZN" value="200" />
-        <Picker.Item label="300 MZN" value="300" />
-      </Picker>*/}
-
-      {/* Dados Pessoais */}
+      {/* Dados Pessoais (sempre exibidos) */}
       <Text style={styles.label}>Nome do Solicitante:</Text>
       <TextInput
         value={requesterName}
@@ -105,15 +87,44 @@ const Home = () => {
         keyboardType="email-address"
       />
 
-      <Text style={styles.label}>Informações Adicionais:</Text>
-      <TextInput
-        value={additionalInfo}
-        onChangeText={setAdditionalInfo}
-        style={[styles.input, { height: 80 }]}
-        placeholder="Informações adicionais"
-        placeholderTextColor="#666"
-        multiline
-      />
+      {/* Campos adicionais dependendo do tipo de licenciamento */}
+      {licensingType === 'simplified' && (
+        <>
+          <Text style={styles.label}>Taxa: 50% do Salário Mínimo</Text>
+        </>
+      )}
+
+      {licensingType === 'commercial' && (
+        <>
+          <Text style={styles.label}>Taxa: 1 Salário Mínimo</Text>
+          <Text style={styles.label}>Declaração do Bairro/Municipal:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Insira a declaração"
+            placeholderTextColor="#666"
+          />
+        </>
+      )}
+
+      {licensingType === 'industrial' && (
+        <>
+          <Text style={styles.label}>Taxa: variável conforme dimensão da indústria</Text>
+          <Text style={styles.label}>Projeto Industrial:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Descrição do projeto"
+            placeholderTextColor="#666"
+            multiline
+          />
+          <Text style={styles.label}>Estudo de Impacto Ambiental:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Insira o estudo"
+            placeholderTextColor="#666"
+            multiline
+          />
+        </>
+      )}
 
       {/* Botão para solicitar */}
       <Link to="/solicitacao-feita" onPress={handleRequest} style={styles.button}>
@@ -163,14 +174,13 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   picker: {
-
     color: '#1a2b36',
     marginBottom: 15,
     height: 40,
     backgroundColor: '#ffffff',
     borderWidth: 1,
-    borderColor: "black",
-    borderStyle: "solid"
+    borderColor: 'black',
+    borderStyle: 'solid',
   },
   input: {
     height: 40,
